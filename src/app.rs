@@ -17,16 +17,29 @@ const APP_ICON: &[u8] = include_bytes!("../res/icons/hicolor/scalable/apps/icon.
 /// The application model stores app-specific state used to describe its interface and
 /// drive its logic.
 pub struct AppModel {
-    /// Application state which is managed by the COSMIC runtime.
     core: Core,
-    /// Display a context drawer with the designated page if defined.
     context_page: ContextPage,
-    /// Contains items assigned to the nav bar panel.
     nav: nav_bar::Model,
-    /// Key bindings for the application's menu bar.
     key_binds: HashMap<menu::KeyBind, MenuAction>,
-    // Configuration data that persists between application runs.
     config: Config,
+    selected_product: Option<Product>,
+    selected_export: Option<Export>,
+}
+
+#[derive(Debug, Clone)]
+pub enum Product {
+    Laptop,
+    Desktop,
+    Launch,
+    Server,
+}
+
+#[derive(Debug, Clone)]
+pub enum Export {
+    Repair,
+    AR,
+    Return,
+    Purchase,
 }
 
 /// Messages emitted by the application and its widgets.
@@ -36,6 +49,8 @@ pub enum Message {
     SubscriptionChannel,
     ToggleContextPage(ContextPage),
     UpdateConfig(Config),
+    ProductSelected(Product),
+    ExportSelected(Export),
 }
 
 /// Create a COSMIC application from the app model
@@ -66,18 +81,18 @@ impl Application for AppModel {
         let mut nav = nav_bar::Model::default();
 
         nav.insert()
-            .text(fl!("page-id", num = 1))
+            .text(fl!("laptops"))
             .data::<Page>(Page::Page1)
             .icon(icon::from_name("applications-science-symbolic"))
             .activate();
 
         nav.insert()
-            .text(fl!("page-id", num = 2))
+            .text(fl!("desktops"))
             .data::<Page>(Page::Page2)
             .icon(icon::from_name("applications-system-symbolic"));
 
         nav.insert()
-            .text(fl!("page-id", num = 3))
+            .text(fl!("keyboards"))
             .data::<Page>(Page::Page3)
             .icon(icon::from_name("applications-games-symbolic"));
 
@@ -100,6 +115,8 @@ impl Application for AppModel {
                     }
                 })
                 .unwrap_or_default(),
+            selected_product: None,
+            selected_export: None, 
         };
 
         // Create a startup command that sets the window title.
@@ -189,6 +206,10 @@ impl Application for AppModel {
     /// on the application's async runtime.
     fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
         match message {
+            Message::ProductSelected(product) => {
+            }
+            Message::ExportSelected(export) => {
+            }
             Message::OpenRepositoryUrl => {
                 _ = open::that_detached(REPOSITORY);
             }

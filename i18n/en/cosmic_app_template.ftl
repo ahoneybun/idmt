@@ -1,5 +1,7 @@
 app-title = COSMIC App Template
 about = About
 view = View
-welcome = Welcome to COSMIC! ✨
-page-id = Page { $num }
+welcome = Select a Product to create International Paperwork
+laptops = Laptops
+desktops = Desktops
+keyboards = Keyboards
